@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define N  100000000;
+int V[N];
+
+int insertarArreglo(int V[]){
+int i=0;
+ FILE *archivo;
+	char caracter;
+ 
+	archivo = fopen("prueba.txt","r");
+ 
+	if (archivo == NULL){
+ 
+		printf("\nError de apertura del archivo. \n\n");
+        }else{
+      while(feof(archivo)==0){
+      contador++;
+      }
+      if(contador<=N){
+	    while (feof(archivo) == 0)
+	    {
+		caracter = fgetc(archivo);
+		int numero = atoi(caracter);
+		V[i] = numero;
+		i++
+	    }
+	   }else{
+	   
+	   printf("\n Se sobrepaso el limite del arreglo. \n\n");
+	   
+	   }
+        }
+        fclose(archivo);
+
+
+
+return 1;
+}
+int main()
+{
+
+	return 0;
+}
