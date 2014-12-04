@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <malloc.h>
+
+#define N 100000
+
+
+
+int main(){
+
+  char V[N];
+  int i=0,j=0;
+
+  /**lectura archivo***/
+  FILE *archivo;
+  char caracter;
+
+  archivo = fopen("entrada.txt","r");
+
+  if (archivo == NULL){
+    printf("\nError de apertura del archivo. \n\n");
+  }else{
+    printf("\nEl contenido del archivo de prueba es \n\n");
+    while (feof(archivo) == 0){
+  	   caracter = fgetc(archivo);
+       V[i]= caracter;
+       i++;
+  	   printf("%c",caracter);
+  	}
+  }
+  fclose(archivo);
+
+  printf("\nel contenido del arreglo es:\n");
+  for(j =0; j<i;j++){
+    printf("%c ",V[j]);
+  }
+  return 0;
+}
