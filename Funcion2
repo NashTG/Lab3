@@ -1,44 +1,90 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define N  100000000;
-int V[N];
+#include<string.h>
+#include<math.h>
+#define N  100
 
-int insertarArreglo(int V[]){
+int V[N];
+int insertarArreglo(){
 int i=0;
+int numero=0;
+
  FILE *archivo;
-	char caracter;
+	char caracter[N];
+	char *caracterSplit;
+
  
-	archivo = fopen("prueba.txt","r");
+	archivo = fopen("pene.txt","r");
  
 	if (archivo == NULL){
  
 		printf("\nError de apertura del archivo. \n\n");
+        
         }else{
-      while(feof(archivo)==0){
-      contador++;
-      }
-      if(contador<=N){
-	    while (feof(archivo) == 0)
-	    {
-		caracter = fgetc(archivo);
-		int numero = atoi(caracter);
-		V[i] = numero;
-		i++
-	    }
-	   }else{
-	   
-	   printf("\n Se sobrepaso el limite del arreglo. \n\n");
-	   
-	   }
-        }
+        	
+      			
+      			
+	    			while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){
+
+
+	    				 if (1 == sscanf(caracter,"%d",&numero))
+                                  {
+                                          
+                                          printf("%d\n",numero);
+                                          V[i]=numero;
+	    								  i++;
+                                  }
+	    				
+	    				
+					
+	    			}
+	   			
+        	}
         fclose(archivo);
+        
+       
+
+        int largo;
+        largo = i;
+
+return largo;
+
+}
 
 
+float moduloArreglo(int largo){
+int i=0;
+float modulo=0;
+		while(i<largo){
 
-return 1;
+			modulo = modulo + (V[i]*V[i]);
+
+			i++;
+		}	
+		//printf("%d\n",modulo );
+		modulo = sqrt(modulo);
+
+return modulo;
+}
+
+float funcionOp(float limite){
+	float resultado=0;
+	int i;
+		for (i = 0; i < limite; i++)
+		{
+			resultado = resultado + (V[i]*V[i+1]);
+			
+		}
+
+
+	return resultado;
 }
 int main()
-{
-
+{	
+	int superLargo = insertarArreglo();
+	float supermodulo= moduloArreglo(superLargo);
+	printf("%f\n",supermodulo );
+	float superResultado= funcionOp(supermodulo);
+	printf("%f\n",superResultado );
 	return 0;
 }
