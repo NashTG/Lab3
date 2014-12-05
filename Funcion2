@@ -13,7 +13,7 @@ int numero=0;
 	char caracter[N];
 
  
-	archivo = fopen("pene.txt","r");
+	archivo = fopen("entrada.txt","r");
  
 	if (archivo == NULL){
  
