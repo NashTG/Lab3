@@ -3,17 +3,14 @@
 #include <math.h>
 #include <malloc.h>
 
+
 #define N 100000
 
-
-
-int main(){
-
-  char V[N];
-  int i=0,j=0;
-
+/*
+void llenarArreglo(char V[]){
+  int j=0,i=0;
   /**lectura archivo***/
-  FILE *archivo;
+  /*FILE *archivo;
   char caracter;
 
   archivo = fopen("entrada.txt","r");
@@ -22,18 +19,59 @@ int main(){
     printf("\nError de apertura del archivo. \n\n");
   }else{
     printf("\nEl contenido del archivo de prueba es \n\n");
-    while (feof(archivo) == 0){
-  	   caracter = fgetc(archivo);
+    while(feof(archivo) == 0){
+
+       fgets(caracter,10,archivo);
        V[i]= caracter;
+       printf("%c",caracter);
        i++;
-  	   printf("%c",caracter);
-  	}
+    }
   }
   fclose(archivo);
+}*/
 
-  printf("\nel contenido del arreglo es:\n");
-  for(j =0; j<i;j++){
-    printf("%c ",V[j]);
+int power(int x, unsigned int y)
+{
+    int temp;
+    if( y == 0)
+        return 1;
+    temp = power(x, y/2);
+    if (y%2 == 0)
+        return temp*temp;
+    else
+        return x*temp*temp;
+}
+
+double raiz(double n)
+{
+    return power(n,.5);
+}
+
+
+
+int main(){
+  int j=0;
+  int i=0;
+
+  char V[N];
+  //llenarArreglo(V);
+
+  double arreglo[7],sum;
+  arreglo[0]=4; 
+  arreglo[1]=7;
+  arreglo[2]=2;
+  arreglo[3]=3;
+  arreglo[4]=8;
+  arreglo[5]=1;
+  arreglo[6]=5;
+  //double sum =0;
+  
+  //Función
+  for(j=0; j<7;j++){
+    sum = sum + sqrt(pow(arreglo[j],arreglo[j]));
   }
+
+  printf("\n sum: %f\n",sum);
+
   return 0;
 }
