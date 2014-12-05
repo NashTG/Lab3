@@ -87,3 +87,4 @@ int main()
 	printf("%f\n",superResultado );
 	return 0;
 }
+//Referencia : http://www.macuarium.com/foro/index.php?showtopic=157582
