@@ -2,16 +2,17 @@
 #include<stdlib.h>
 #include<string.h>
 #include<math.h>
+#include<getopt.h>
 #define N  1000000
 
 int V[N]; //arreglo Global
-int insertarArreglo(){ //Funcion que inserta los datos del texto en un arreglo y a su vez calcula el largo del arreglo a trabajar
+int insertarArreglo(char *cvalue){ //Funcion que inserta los datos del texto en un arreglo y a su vez calcula el largo del arreglo a trabajar
 int i=0;
 int numero=0;
 
 FILE *archivo;
 char caracter[N];
-archivo = fopen("entrada.txt","r");
+archivo = fopen(cvalue,"r");
 if (archivo == NULL){ //chequea si el archivo esta con datos o no
 	printf("\nError de apertura del archivo. \n\n");
 }else{
@@ -48,8 +49,38 @@ float funcionOp(float limite){// realiza la funcion solicitada
 	return resultado;
 }
 
-int main(){	
-	int superLargo = insertarArreglo();
+int main(int argc, char **argv){	
+
+  char *fvalue = NULL;
+  int index;
+  int c;
+
+  opterr = 0;
+  while ((c = getopt (argc, argv, "f:")) != -1)
+    switch (c)
+      {
+      case 'f':
+        fvalue = optarg;
+        break;
+      case '?':
+        if (optopt == 'c')
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return 1;
+      default:
+        abort ();
+      }
+  printf ("fvalue = %s\n", fvalue);
+
+  for (index = optind; index < argc; index++)
+    printf ("Non-option argument %s\n", argv[index]);
+
+	int superLargo = insertarArreglo(fvalue);
 	float supermodulo= moduloArreglo(superLargo);
 	printf("%f\n",supermodulo );
 	float superResultado= funcionOp(supermodulo);
