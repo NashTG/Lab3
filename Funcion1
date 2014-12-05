@@ -2,21 +2,25 @@
 #include <stdlib.h>
 #include <math.h>
 #include <malloc.h>
+#include <getopt.h>
 
 #define N 1000000
 
 int V[N];   //Arreglo Global
 //lectura de archivo y llenado de V[N]
-int insertarArreglo(){
+int insertarArreglo(char *fvalue){
   int i=0;
   int numero=0;
 
   FILE *archivo;
   char caracter[N];
-  archivo = fopen("entrada.txt","r");
+
+  archivo = fopen(fvalue,"r");
 
   if (archivo == NULL){
+
     printf("\nError de apertura del archivo. \n\n");
+
   }else{
     while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){
       if (1 == sscanf(caracter,"%d",&numero)){
@@ -29,16 +33,49 @@ int insertarArreglo(){
   return i;
 }
 
-int main(){
+
+int main(int argc, char **argv){  
+
+  char *fvalue = NULL;
+  int index;
+  int c;
+  //GETOPT
+  opterr = 0;
+  while ((c = getopt (argc, argv, "f:")) != -1)
+    switch (c)
+      {
+      case 'f':
+        fvalue = optarg;
+        break;
+      case '?':
+        if (optopt == 'c')
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return 1;
+      default:
+        abort ();
+      }
+  printf ("fvalue = %s\n", fvalue);
+
+
   int j=0;
   int i=0;
   double sum =0;    //sumatoria
-  i =insertarArreglo();   //largo de V[N]
+
+  i =insertarArreglo(fvalue);   //largo de V[N]
   
   //Función Sumatoria
   for(j=0; j<i;j++){
     sum = sum + sqrt(pow(V[j],V[j]));
   }
+
   printf("El resultado es: %f\n",sum);
+
   return 0;
 }
+
