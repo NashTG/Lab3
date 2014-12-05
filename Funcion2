@@ -9,70 +9,46 @@ int insertarArreglo(){ //Funcion que inserta los datos del texto en un arreglo y
 int i=0;
 int numero=0;
 
- FILE *archivo;
-	char caracter[N];
+FILE *archivo;
+char caracter[N];
+archivo = fopen("entrada.txt","r");
+if (archivo == NULL){ //chequea si el archivo esta con datos o no
+	printf("\nError de apertura del archivo. \n\n");
+}else{
+	while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){//recorre el fichero
+		if (1 == sscanf(caracter,"%d",&numero)){
+			printf("%d\n",numero);  
+	                V[i]=numero;    //inserta al arreglo
+			i++;
+                }
+        }
+}
+fclose(archivo);
 
- 
-	archivo = fopen("entrada.txt","r");
- 
-	if (archivo == NULL){ //chequea si el archivo esta con datos o no
- 
-		printf("\nError de apertura del archivo. \n\n");
-        
-        }else{
-        	
-      			
-      			
-	    			while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){//recorre el fichero
-
-
-	    				 if (1 == sscanf(caracter,"%d",&numero))
-                                  {
-                                          
-                                          printf("%d\n",numero);  
-                                          V[i]=numero;    //inserta al arreglo
-	    								  i++;
-                                  }
-	    				
-	    				
-					
-	    			}
-	   			
-        	}
-        fclose(archivo);
-       
-        int largo;
-        largo = i;
-
-return largo;
-
+return i;
 }
 
 float moduloArreglo(int largo){
-int i=0;
-float modulo=0;
-		while(i<largo){
-			modulo = modulo + (V[i]*V[i]);
-			i++;
-		}	
-		modulo = sqrt(modulo);
-return modulo;
+	int i=0;
+	float modulo=0;
+	while(i<largo){
+		modulo = modulo + (V[i]*V[i]);
+		i++;
+	}	
+	modulo = sqrt(modulo);
+	return modulo;
 }
 
 float funcionOp(float limite){// realiza la funcion solicitada
 	float resultado=0;
 	int i;
-		for (i = 0; i < limite; i++)
-		{
+		for (i = 0; i < limite; i++){
 			resultado = resultado + (V[i]*V[i+1]);
-			
 		}
-
-
 	return resultado;
 }
-int main()
-{	
+
+int main(){	
 	int superLargo = insertarArreglo();
 	float supermodulo= moduloArreglo(superLargo);
 	printf("%f\n",supermodulo );
