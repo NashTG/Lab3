@@ -51,10 +51,10 @@ float funcionOp(float limite){// realiza la funcion solicitada
 
 int main(int argc, char **argv){	
 
-  char *fvalue = NULL;
+  char *fvalue = NULL; //variable para guardar el dato entrado con -f 
   int index;
   int c;
-
+//GETOPT
   opterr = 0;
   while ((c = getopt (argc, argv, "f:")) != -1)
     switch (c)
