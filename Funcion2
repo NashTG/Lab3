@@ -2,10 +2,10 @@
 #include<stdlib.h>
 #include<string.h>
 #include<math.h>
-#define N  100
+#define N  1000000
 
-int V[N];
-int insertarArreglo(){
+int V[N]; //arreglo Global
+int insertarArreglo(){ //Funcion que inserta los datos del texto en un arreglo y a su vez calcula el largo del arreglo a trabajar
 int i=0;
 int numero=0;
 
@@ -15,7 +15,7 @@ int numero=0;
  
 	archivo = fopen("entrada.txt","r");
  
-	if (archivo == NULL){
+	if (archivo == NULL){ //chequea si el archivo esta con datos o no
  
 		printf("\nError de apertura del archivo. \n\n");
         
@@ -23,14 +23,14 @@ int numero=0;
         	
       			
       			
-	    			while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){
+	    			while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){//recorre el fichero
 
 
 	    				 if (1 == sscanf(caracter,"%d",&numero))
                                   {
                                           
-                                          printf("%d\n",numero);
-                                          V[i]=numero;
+                                          printf("%d\n",numero);  
+                                          V[i]=numero;    //inserta al arreglo
 	    								  i++;
                                   }
 	    				
@@ -40,9 +40,7 @@ int numero=0;
 	   			
         	}
         fclose(archivo);
-        
        
-
         int largo;
         largo = i;
 
@@ -50,23 +48,18 @@ return largo;
 
 }
 
-
 float moduloArreglo(int largo){
 int i=0;
 float modulo=0;
 		while(i<largo){
-
 			modulo = modulo + (V[i]*V[i]);
-
 			i++;
 		}	
-		//printf("%d\n",modulo );
 		modulo = sqrt(modulo);
-
 return modulo;
 }
 
-float funcionOp(float limite){
+float funcionOp(float limite){// realiza la funcion solicitada
 	float resultado=0;
 	int i;
 		for (i = 0; i < limite; i++)
