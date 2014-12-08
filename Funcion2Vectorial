@@ -1,5 +1,135 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<math.h>
+#include <time.h>
 #include <xmmintrin.h>
 #include <emmintrin.h>
-#include <pmmintrin.h>
+#define N  1000000
 
-#include <stdio.h>
+
+
+float V[N]; //arreglo Global
+float V2[N];
+int insertarArreglo(char *cvalue){ //Funcion que inserta los datos del texto en un arreglo y a su vez calcula el largo del arreglo a trabajar
+int i=0;
+int numero=0;
+
+FILE *archivo;
+char caracter[N];
+archivo = fopen(cvalue,"r");
+if (archivo == NULL){ //chequea si el archivo esta con datos o no
+    printf("\nError de apertura del archivo. \n\n");
+}else{
+    while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){//recorre el fichero
+        if (1 == sscanf(caracter,"%d",&numero)){
+             
+                    V[i]=numero;   //inserta al arreglo
+                    if (i!=0)
+                    {
+                        V2[i-1]=numero;
+                    }
+            i++;
+                }
+        V[i+1]=0;
+        V[i+2]=0;
+        V[i+3]=0;
+        V[i+4]=0;
+        V2[i]=0;
+        V2[i+1]=0;
+        V2[i+2]=0;
+        V2[i+3]=0;
+
+        }
+       
+}
+fclose(archivo);
+
+return i;
+}
+
+
+
+float funcionSSE(float limite) {
+ 
+    float prod;
+    int i;
+    __m128 X, Y;// vectores para trabajar las multiplicaciones
+    __m128 Z = _mm_setzero_ps();// vector sumatoria 
+ 
+    for(i=0; i<limite; i+=4) {
+        X = _mm_load_ps(&V[i]);
+        Y = _mm_load_ps(&V2[i]);
+        Z = _mm_add_ps(Z,_mm_mul_ps(X,Y));
+    }
+
+    
+
+    for(i=0; i<4; i++) {
+        prod += Z[i];
+    }
+ 
+    return prod;
+ 
+}
+
+
+float moduloArreglo(int limite){
+    int i=0;
+    float modulo=0;
+    __m128 X, Y, Z;
+    Z = _mm_setzero_ps();
+    for(i=0; i<limite; i+=4) {
+        X = _mm_load_ps(&V[i]);
+        Y = _mm_load_ps(&V[i]);
+        Z = _mm_add_ps(Z,_mm_mul_ps(X,Y));
+        
+    }
+ 
+    Z = _mm_sqrt_ps(Z);
+
+    modulo = Z[0]+Z[1]+Z[2]+Z[3];
+    return modulo;
+}
+ 
+int main(int argc, char * argv[]) {
+ 
+         char *fvalue = NULL;
+         int index;
+         int c;
+
+  opterr = 0;
+  while ((c = getopt (argc, argv, "f:")) != -1)
+    switch (c)
+      {
+      case 'f':
+        fvalue = optarg;
+        break;
+      case '?':
+        if (optopt == 'c')
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return 1;
+      default:
+        abort ();
+      }
+  printf ("fvalue = %s\n", fvalue);
+
+  for (index = optind; index < argc; index++)
+    printf ("Non-option argument %s\n", argv[index]);
+
+    int superLargo = insertarArreglo(fvalue);
+    float supermodulo= moduloArreglo(superLargo);
+    printf("%f\n",supermodulo );
+    float superResultado= funcionOp(supermodulo);
+    printf("%f\n",superResultado );
+    return 0;
+    
+
+ 
+}
