@@ -1,5 +1,98 @@
 #include <xmmintrin.h>
 #include <emmintrin.h>
 #include <pmmintrin.h>
-
+#include <math.h>
 #include <stdio.h>
+#include <getopt.h>
+
+#define N 100000
+
+float V[N] __attribute__((aligned(16)));   //Arreglo Global
+//lectura de archivo y llenado de V[N]
+int insertarArreglo(char *fvalue){
+  int i=0;	//contador de líneas
+  int numero=0;		//numero a leer en cada linea
+
+  FILE *archivo;
+  char caracter[N];		
+
+  archivo = fopen(fvalue,"r");
+
+  if (archivo == NULL){
+
+    printf("\nError de apertura del archivo. \n\n");
+
+  }else{
+    while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){
+      if (1 == sscanf(caracter,"%d",&numero)){
+        V[i]=numero;
+        i++;
+      }
+    }
+  }
+  fclose(archivo);
+  return i;		//se retorna la cantidad de líneas leídas
+}
+
+float func(int largo){
+
+	float fin;		//suma final
+	int i;			
+	__m128 v;		//vector
+	__m128 sum = _mm_setzero_ps();	//sumatoria parcial
+
+	for(int j=0;j<largo;j++){
+		V[j]=pow(V[j],V[j]);	//se eleva a si mismo cada elemento del vector
+	}
+
+	for(i =0 ; i<largo;i=i+4){
+		
+		v = _mm_load_ps(&V[i]);	//carga elementos del Vector V
+		v = _mm_sqrt_ps(v);		//calcula la raìz del grupo de elementos
+		sum = _mm_add_ps(sum,v);	//suma de dichas raíces
+	}
+
+	for(i = 0;i<4;i++){
+		fin += sum[i];		//sumatoria de los elementos en flotantes
+	}
+	return fin;		//retorna sumatoria final
+}
+
+
+int main(int argc, char **argv){  
+
+  char *fvalue = NULL;
+  int index;
+  int c,largo;
+  					//GETOPT
+  opterr = 0;
+  while ((c = getopt (argc, argv, "f:")) != -1)
+    switch (c)
+      {
+      case 'f':
+        fvalue = optarg;		//entrada de archivo de texto
+        break;
+      case '?':
+        if (optopt == 'c')
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return 1;
+      default:
+        abort ();
+      }
+  printf ("fvalue = %s\n", fvalue);		//se imprime la entrada
+
+
+
+largo = insertarArreglo(fvalue);	//se llena el arreglo V con lo que se ingresa por entrada
+
+float result = func(largo);		//se llama a la función 
+printf("%f\n",result);		//imprime resultado final
+
+  return 0;
+}
