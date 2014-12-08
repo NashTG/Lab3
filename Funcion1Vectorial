@@ -37,11 +37,11 @@ int insertarArreglo(char *fvalue){
 float func(int largo){
 
 	float fin;		//suma final
-	int i;			
+	int i,j;			
 	__m128 v;		//vector
 	__m128 sum = _mm_setzero_ps();	//sumatoria parcial
 
-	for(int j=0;j<largo;j++){
+	for(j=0;j<largo;j++){
 		V[j]=pow(V[j],V[j]);	//se eleva a si mismo cada elemento del vector
 	}
 
