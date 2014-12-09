@@ -1,4 +1,107 @@
 #include <xmmintrin.h>
 #include <emmintrin.h>
 #include <pmmintrin.h>
+#include <math.h>
+#include <stdio.h>
+#include <getopt.h>
 
+#define N 100000
+
+float V1[N] __attribute__((aligned(16)));   //Arreglo Global
+float V2[N] __attribute__((aligned(16)));   //Arreglo Global
+
+int insertarArreglo(char *fvalue){
+  int i=0;	//contador de líneas
+  int numero=0;		//numero a leer en cada linea
+
+  FILE *archivo;
+  char caracter[N];		
+
+  archivo = fopen(fvalue,"r");
+
+  if (archivo == NULL){
+
+    printf("\nError de apertura del archivo. \n\n");
+
+  }else{
+    while (fscanf(archivo,"%[^\n]%*[\n]",caracter) != EOF){
+      if (1 == sscanf(caracter,"%d",&numero)){
+        V1[i]=numero;
+        V2[i]=numero;
+        i++;
+      }
+    }
+  }
+  fclose(archivo);
+  return i;		//se retorna la cantidad de líneas leídas
+}
+
+float func(int largo){
+	float fin; //suma final
+	int i;
+
+	__m128 vec1,vec2,aux1,aux2;	 //vectores 1 y 2 y auxiliares
+	__m128 sum = _mm_setzero_ps(); //suma parcial 1(vectorial)
+	__m128 sum2 = _mm_setzero_ps(); //suma parcial 2(vectorial)
+
+	for(i=0;i<largo;i=i+4){
+		vec1=_mm_load_ps(&V1[i]); //cargando elementos de V1 en vec1
+		vec2=_mm_load_ps(&V2[i]); //cargando elementos de V2 en vec2
+		aux1 = _mm_div_ps(vec1,_mm_set1_ps(2.0));		//a[i]/2
+		aux2 = _mm_sqrt_ps(vec2);		//raíz de b[i]
+		sum = _mm_add_ps(sum,aux1);		//sum = sum + a[i]/2...
+		sum = _mm_add_ps(sum,aux2);		//...+ raíz de b[i]
+	}	
+
+	for(i=0;i<largo;i=i+4){
+		vec1 = _mm_load_ps(&V1[i]); //cargando elementos de V1 en vec1
+		vec2 = _mm_load_ps(&V2[i]); //cargando elementos de V2 en vec2
+		aux1 = _mm_mul_ps(vec1,vec1);		//a[i]²
+		
+		sum2 = _mm_add_ps(sum2,aux1);		//sum2 = sum2 + a[i]²...
+		sum2 = _mm_sub_ps(sum2,sum);		//... - sum
+	}	
+	for(i = 0;i<4;i++){
+		fin += sum2[i];		//sumatoria de los elementos en flotantes
+	}
+	return fin;
+
+}
+
+
+int main(int argc, char **argv){  
+
+ char *fvalue = NULL;
+  int index;
+  int c,largo;
+  					//GETOPT
+  opterr = 0;
+  while ((c = getopt (argc, argv, "f:")) != -1)
+    switch (c)
+      {
+      case 'f':
+        fvalue = optarg;		//entrada de archivo de texto
+        break;
+      case '?':
+        if (optopt == 'c')
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+        return 1;
+      default:
+        abort ();
+      }
+  printf ("fvalue = %s\n", fvalue);		//se imprime la entrada
+
+  largo = insertarArreglo(fvalue); //llenado de los dos arreglos
+  float result = func(largo);
+
+  printf("\nEl resultado es: %f\n",result); //salida de resultado final
+
+  return 0;
+
+}
