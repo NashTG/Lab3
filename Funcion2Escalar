@@ -87,5 +87,3 @@ int main(int argc, char **argv){
 	printf("%f\n",superResultado );
 	return 0;
 }
-//Referencia : http://www.macuarium.com/foro/index.php?showtopic=157582}
-//	     :http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html
